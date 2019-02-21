@@ -1,0 +1,4 @@
+python3 -m pytest --cov moviedb --cov-report html --cov-branch
+python3 -m pytest 
+export FLASK_APP=server.py  
+flask run

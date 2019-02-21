@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+   <body>
+{% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.title) }}
+    {{ render_field(form.duration) }}
+    {{ render_field(form.rating) }}
+    {{ render_field(form.genres) }}
+    {{ render_field(form.submit) }}
+  </dl>
+</form>
+   </body>
+</html>
