@@ -26,6 +26,8 @@ class FilmInDB(Base):
         "GenreInDB",
         secondary=GenreInFilm,
     )
+    def to_Film(self):
+        return db.Film(self.title,self.duration,self.genres,self.rating)
 
 class GenreInDB(Base):
 
@@ -59,3 +61,8 @@ class SqlAlchemyFilmStorage(db.FilmStorage):
         session = self.Session()
         result = session.query(FilmInDB).filter(FilmInDB.title == title).first()
         return result
+
+    def get_all(self):
+        session= self.Session()
+        all_movies = session.query(FilmInDB).all()
+        return [m.to_Film() for m in  all_movies]

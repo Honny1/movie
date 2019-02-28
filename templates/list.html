@@ -1,0 +1,10 @@
+<!DOCTYPE html><html>
+    <header></header>
+    <body>
+        <ul>
+            {% for item in data %}
+            <li>{{ item.title }},{{ item.duration }},{{ item.genres }},{{ item.rating }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

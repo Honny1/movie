@@ -1,9 +1,12 @@
 import moviedb.db
+import moviedb.sqla
+import flask
 from flask import Flask, request, render_template, redirect,url_for
 from flask import jsonify
 from wtforms import Form, BooleanField, SubmitField, StringField, PasswordField, validators, IntegerField, FloatField, TextAreaField
 app = Flask(__name__)
 
+db_instance = moviedb.sqla.SqlAlchemyFilmStorage("sqlite:///sqla.db")
 
 class AddForm(Form):
     
@@ -33,7 +36,7 @@ def show_film(wanted_film):
             if film.title == wanted_film:
                 result[wanted_film] = film.to_dict()
     # use flask.jsonify for return json
-    return jsonify(**result)
+    return flask.jsonify(**result)
 
 @app.route('/add', methods=['GET', 'POST'])
 def addFilm():
@@ -44,5 +47,16 @@ def addFilm():
         film = moviedb.db.Film(form.title.data,form.duration.data,form.genres.data.split(";"),form.rating.data)
         populated_db.store(film)
         moviedb.db.save_database(populated_db,'films.json')
+        
+        db_instance.store(film)
+        
         return redirect(url_for('show_film', wanted_film = form.title.data))
     return render_template('add.html', form=form)
+
+@app.route('/')
+def home():
+    all_movies = db_instance.get_all()
+    print(all_movies)
+    return flask.render_template("list.html",data = all_movies)
+
+app.run('0.0.0.0', 5000, True)
